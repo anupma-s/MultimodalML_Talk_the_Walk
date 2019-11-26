@@ -58,6 +58,9 @@ class LanguageDecoder(nn.Module):
     def __init__(self, n_latents):
         super(LanguageDecoder, self).__init__()
 
+class Swish(nn.Module):
+    def forward(self, x):
+        return x * F.sigmoid(x)
 
 
 
