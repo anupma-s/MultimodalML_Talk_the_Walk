@@ -20,11 +20,11 @@ def compute_loss(recon_image, image, recon_lang, lang, mu, logvar,
     image_bce = 0
     lang_bce = 0
     
-    image_bce = torch.sum(binary_cross_entropy_with_logits(
+    image_bce = torch.sum(bce_loss(
             recon_image.view(-1, 3 * 64 * 64), 
             image.view(-1, 3 * 64 * 64)), dim=1)
 
-    lang_bce = torch.sum(binary_cross_entropy_with_logits(
+    lang_bce = torch.sum(bce_loss(
             recon_lang, lang))
 
 
@@ -33,7 +33,7 @@ def compute_loss(recon_image, image, recon_lang, lang, mu, logvar,
                       + annealing_factor * kld)
     return loss
 
-def binary_cross_entropy_with_logits(input, target):
+def bce_loss(input, target):
     return (torch.clamp(input, 0) - input * target 
             + torch.log(1 + torch.exp(-torch.abs(input))))
 
@@ -94,3 +94,6 @@ if __name__ == "__main__":
                     100. * batch_idx / len(train_loader), total_train_loss))
 
         print('====> Epoch: {}\tLoss: {:.4f}'.format(epoch, total_train_loss))
+
+
+
