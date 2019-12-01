@@ -7,11 +7,11 @@ from torch.nn import functional as F
 
 class Multimodal_AE(nn.Module):
 
-    def __init__(self, n_latents):
+    def __init__(self, n_latents, training=True):
         super(Multimodal_AE, self).__init__()
         self.img_enc = ImageEncoder(n_latents)
         self.n_latents     = n_latents
-        self.training = ??????????
+        self.training = training
 
     def forward(self, image=None, attrs=None):
         # mu, logvar  = self.infer(image, attrs)
