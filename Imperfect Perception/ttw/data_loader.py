@@ -211,7 +211,7 @@ class TalkTheWalkLanguage(Dataset):
                     dialogue_context.append(self.dict.encode(msg['text']))
 
     def __getitem__(self, index):
-        return {(key: self.data[key][index] for key in self.data.keys(), key: self.data2[key][index] for key in self.data2.keys())}
+        return ({key: self.data[key][index] for key in self.data.keys()}, {key: self.data2[key][index] for key in self.data2.keys()})
 
     def __len__(self):
         return len(self.data['target'])

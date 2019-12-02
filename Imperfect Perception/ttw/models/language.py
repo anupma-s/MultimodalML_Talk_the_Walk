@@ -224,7 +224,7 @@ class TouristLanguage(nn.Module):
         data = [dataset[ind] for ind in indices]
         batch = collate_fn(data)
 
-        out = self.forward(batch, decoding_strategy=decoding_strategy, train=False, beam_width=beam_width)
+        out = self.forward(batch[0], decoding_strategy=decoding_strategy, train=False, beam_width=beam_width)
 
         generated_utterance = out['utterance'].cpu().data
         logger_fn = print
@@ -233,14 +233,14 @@ class TouristLanguage(nn.Module):
 
         for i in range(len(indices)):
             o = ''
-            for obs in data[i]['goldstandard']:
+            for obs in data[i][0]['goldstandard']:
                 o += '(' + ','.join([dataset.map.landmark_dict.decode(o_ind) for o_ind in obs]) + ') ,'
             # a = ', '.join([i2act[a_ind] for a_ind in actions[i]])
-            a = ','.join([dataset.act_dict.decode(a_ind) for a_ind in data[i]['actions']])
+            a = ','.join([dataset.act_dict.decode(a_ind) for a_ind in data[i][0]['actions']])
 
             logger_fn('Observations: ' + o)
             logger_fn('Actions: ' + a)
-            logger_fn('GT: ' + dataset.dict.decode(batch['utterance'][i, 1:]))
+            logger_fn('GT: ' + dataset.dict.decode(batch[0]['utterance'][i, 1:]))
             logger_fn('Sample: ' + dataset.dict.decode(generated_utterance[i, :]))
             logger_fn('-' * 80)
 

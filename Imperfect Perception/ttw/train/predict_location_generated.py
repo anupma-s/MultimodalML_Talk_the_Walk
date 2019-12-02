@@ -27,11 +27,15 @@ def cache(dataset, tourist, collate_fn, decoding_strategy='greedy', beam_width=4
     utterances = list()
     for batch in loader:
         t_out = tourist.forward(batch[0], train=False, decoding_strategy=decoding_strategy, beam_width=beam_width)
+        # batch[1]['utterance'] = t_out['utterance']
+        # batch[1]['utterance_mask'] = t_out['utterance_mask']
         for i in range(t_out['utterance'].size(0)):
             utt_len = int(t_out['utterance_mask'][i, :].sum().item())
             utterances.append(t_out['utterance'][i, :utt_len].cpu().data.numpy().tolist())
         index += t_out['utterance'].size(0)
     dataset.data['utterance'] = utterances
+    dataset.data2['utterance'] = utterances
+
 
 
 def epoch(loader, tourist, guide, g_opt=None, t_opt=None,
@@ -45,6 +49,7 @@ def epoch(loader, tourist, guide, g_opt=None, t_opt=None,
                                     beam_width=beam_width,
                                     train=False)
             batch[0]['utterance'] = t_out['utterance']
+
             batch[0]['utterance_mask'] = t_out['utterance_mask']
 
         g_out = guide.forward(batch[1])

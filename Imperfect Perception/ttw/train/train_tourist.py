@@ -86,7 +86,7 @@ if __name__ == '__main__':
         valid_loss = eval_epoch(valid_loader, tourist)
 
         logger.info('Epoch: {} \t Train loss: {},\t Valid_loss: {}'.format(epoch, train_loss, valid_loss))
-        tourist.show_samples(valid_data, cuda=args.cuda, num_samples=5, logger=logger.info)
+        # tourist.show_samples(valid_data, cuda=args.cuda, num_samples=5, logger=logger.info)
 
         if valid_loss < best_val:
             best_val = valid_loss
