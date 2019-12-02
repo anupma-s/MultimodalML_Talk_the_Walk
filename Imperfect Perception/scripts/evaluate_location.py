@@ -20,7 +20,7 @@ from ttw.models import TouristContinuous, GuideContinuous, TouristDiscrete, Guid
     GuideLanguage
 from ttw.data_loader import Map, GoldstandardFeatures, ActionAgnosticDictionary, neighborhoods
 from ttw.dict import Dictionary
-from ttw.utils import get_collate_fn
+from ttw.utils import get_collate_fn, get_collate_fn2
 from ttw.env import step_aware
 
 def evaluate(configs, predict_location_fn, collate_fn, map, feature_loader, random_walk=True, T=2,
@@ -50,6 +50,7 @@ def evaluate(configs, predict_location_fn, collate_fn, map, feature_loader, rand
         actions = []
         locations = [loc]
         predicted = list()
+        # print(len(observations), len(locations))
 
         entry['start_location'] = copy.deepcopy(loc)
         t = time.time()
@@ -61,6 +62,7 @@ def evaluate(configs, predict_location_fn, collate_fn, map, feature_loader, rand
                 batch['actions'] = actions
                 batch['landmarks'] = landmarks
                 batch['target'] = target_index
+
 
                 batch = collate_fn([batch])
 
@@ -209,7 +211,7 @@ if __name__ == '__main__':
             g_out = guide(batch, add_rl_loss=False)
             return g_out['prob'], batch['utterance']
 
-    collate_fn = get_collate_fn(args.cuda)
+    collate_fn = get_collate_fn2(args.cuda)
 
     train_acc, train_log, train_num_actions = evaluate(train_configs, _predict_location, collate_fn, map,
                                                        feature_loader, T=T, dict=dictionary,
